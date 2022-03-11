@@ -1,0 +1,7 @@
+<?xml version="1.0" ?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+	<preference for="Qisst\Oneclick\Api\RaptorInterface" type="Qisst\Oneclick\Model\Api\Raptor"/>
+	<preference for="Qisst\Oneclick\Api\OnepageInterface" type="Qisst\Oneclick\Model\Api\Onepage"/>
+	<preference for="Qisst\Oneclick\Api\ShippingInterface" type="Qisst\Oneclick\Model\Api\Deliverymethod"/>
+	<preference for="Qisst\Oneclick\Api\TaxrateInterface" type="Qisst\Oneclick\Model\Api\Taxrate"/>
+</config>

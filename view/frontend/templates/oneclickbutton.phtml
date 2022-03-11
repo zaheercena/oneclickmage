@@ -1,0 +1,420 @@
+<style>
+    .oneclick-button
+    {
+        background-image: none;
+        background: #1979c3;
+        border: 1px solid #1979c3;
+        color: #fff;
+        cursor: pointer;
+        display: inline-block;
+        font-family: 'Open Sans','Helvetica Neue',Helvetica,Arial,sans-serif;
+        font-weight: 600;
+        box-sizing: border-box;
+        vertical-align: middle;
+        float: left;
+        line-height: 2.2rem;
+        padding: 14px 17px;
+        font-size: 1.8rem;
+        margin-bottom: 15px;
+        width: 49%;
+        border-radius: 3px;
+        width: 100% !important;
+        height: 50px !important;
+        border-radius: 8px !important;
+        font-weight: 700 !important;
+        font-size: 18px !important;
+        background-color: #e82e81 !important;
+        color: white !important;
+        cursor: pointer !important;
+        display: flex !important;
+        -webkit-box-align: center !important;
+        align-items: center !important;
+        -webkit-box-pack: center !important;
+        justify-content: center !important;
+        border: 1px solid #e82e81 !important;
+        outline-color: transparent !important;
+        margin-bottom: 0.5rem !important;
+        text-decoration: none !important;
+    }
+    .action,.primary
+    {
+        float: left;
+    }
+    .qp-custom-mage-design{
+      width: 45%;
+      padding:0px !important;
+      height: 80vh;
+    }
+    .qp8911_modal-body{
+      height: 100%;
+    }
+</style>
+<style>
+
+/* The qp8911_modal (background) */
+.qp8911_modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1000; /* Sit on top */
+  padding-top: 100px; /* Location of the box */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: #00000099; /* Black w/ opacity */
+}
+/* qp8911_modal Content */
+.qp8911_modal-content {
+  background-color: #fefefe;
+  margin: auto;
+  padding: 10px;
+  border: 1px solid #888;
+  width: 30%;
+}
+/* The Close Button */
+.close {
+  color: #aaaaaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+.close:hover,
+.close:focus {
+  color: #000;
+  text-decoration: none;
+  cursor: pointer;
+}
+.qp8911_modal-dialog.qp8911_modal-dialog-centered{
+   display: flex;
+}
+@media screen and (max-width: 768px) {
+    .qp8911_modal-content {
+        width: 90%;
+    }
+}
+.qp8911_modal-body {
+    overflow-y: auto;
+}
+</style>
+
+<!-- <input class="oneclick-button" onclick="triggerIFrame()" value="QisstPay OneClick"> -->
+<p class="oneclick-button" onclick="triggerIFrame()">QisstPay OneClick</p>
+<?php
+$objectManager =  \Magento\Framework\App\ObjectManager::getInstance();
+
+$registry = $objectManager->get('\Magento\Framework\Registry');
+
+$currentProduct = $registry->registry('current_product');
+
+//echo 'Product ID: '.$currentProduct->getId();
+
+$product = $objectManager->create('\Magento\Catalog\Model\Product')->load($currentProduct->getId());
+
+
+//$product_qty = $product['quantity_and_stock_status']['qty'];
+//echo $currentProduct->getAttributeText('qty');
+$product_qty = 1;
+$eavConfig = $objectManager->get('\Magento\Eav\Model\Config');
+$attribute = $eavConfig->getAttribute('catalog_product', 'color');
+
+$options = $attribute->getSource()->getAllOptions();
+$sandboxtoken='WjcbAvjYPEOjqNiVb6sF4aRPYhttzuuVu5cIUgPkSHl5MqKUS446f61h9ml8';
+$identity_token = 'eyJpdiI6InlrdSthYVFvcjJxMC9nY015WS9NN0E9PSIsInZhbHVlIjoiUURHNE5jU2FaMDJ6KytHeTlFc0E4U0xTYVBvSzd0aDRXcFVsUDB5OEVSMjMxYmdqUldUdmNXS2xBN09JbWVyaTdGZE9WNGNlb0VFNGEyR3IvbVJIZXc9PSIsIm1hYyI6IjkyMzc0NGVhYjc5ODQzMTIzNTcyYTlhNWEzZmFiNDc4NWU5NDI0MzI1NjhiZGM1ODEwODNkMDIxMWNkNzU4ZGEiLCJ0YWciOiIifQ==';
+
+
+$values = 'products=[{"id":"'.$currentProduct->getId().'","src":"https:pellelusso.com/wp-content/themes/woodmart/images/lazy.png","quantity":"1","attributes":[],"price":"1500","title":"QP"}]&price=1500&currency=PKR&url=https://pellelusso.com/wp-json/qisstpay/teez/&shipping_total=0&tax=0&shipping_methods=[]';
+
+$params = '[{"id":"'.$currentProduct->getId().'","src":"https://fazalsons.pk/wp-content/uploads/2022/02/TCL-300x300.png","quantity":"1","attributes":[],"price":"1500","title":"QP"}]&price=1500&currency=PKR&url=https://fazalsons.pk/wp-json/qisstpay/teez/&shipping_total=0&tax=0&shipping_methods=[{"title":"Local pickup","cost":""},{"title":"Free shipping","cost":0}]';
+
+$qs='eyJpdiI6Inl4RGE0dVo4L2pUTndkOS92dnpzVUE9PSIsInZhbHVlIjoiTkt0VGJ4Nm5BZHMxOXFDRU9OYi92S2FZVHJ1YWhFbjlGZTRBN2JLT2lucGsvNmhDRHJwM2NWNlFiVkJmYkw1bFBCSnluYnVUb1RXUXdmTkF6ZHR3dlE9PSIsIm1hYyI6IjlmNDE5YmI5YjVkZGRhZTM0MDFhZWY4NjdhZmMzZmI2MGM0ODhmMjc3YzY2NDVlMTUyOTg4MGQyNjlhNGZiZjIiLCJ0YWciOiIifQ==&queryUrl=cHJvZHVjdHM9W3siaWQiOiIxNTk0Iiwic3JjIjoiaHR0cHM6Ly9zYW5kYm94LndvcmRwcmVzcy5xaXNzdHBheS5jb20vd3AtY29udGVudC91cGxvYWRzLzIwMjEvMTEvNjY2NjY2NjY2NjY2LmpwZWciLCJxdWFudGl0eSI6IjEiLCJhdHRyaWJ1dGVzIjpbeyJhdHRyaWJ1dGVfcGFfdGVzdC1hdHQiOiJibHVlIiwidmFyaWF0aW9uX2lkIjoiMzkzNSJ9XSwicHJpY2UiOjE2MDAsInRpdGxlIjoiU2hpcnQifV0mcHJpY2U9MTYwMCZjdXJyZW5jeT1QS1ImdXJsPWh0dHBzOi8vc2FuZGJveC53b3JkcHJlc3MucWlzc3RwYXkuY29tL3dwLWpzb24vcWlzc3RwYXkvdGVlei8mc2hpcHBpbmdfdG90YWw9MjAwJnRheD0zNiZzaGlwcGluZ19tZXRob2RzPVt7InRpdGxlIjoiRmxhdCByYXRlIiwiY29zdCI6IjIwMCJ9LHsidGl0bGUiOiJMb2NhbCBwaWNrdXAiLCJjb3N0IjoiMzUwIn0seyJ0aXRsZSI6IkZyZWUgc2hpcHBpbmciLCJjb3N0IjowfV0=';
+
+
+//https://sandbox.tezcheckout.qisstpay.com/?identity-token=eyJpdiI6Inl4RGE0dVo4L2pUTndkOS92dnpzVUE9PSIsInZhbHVlIjoiTkt0VGJ4Nm5BZHMxOXFDRU9OYi92S2FZVHJ1YWhFbjlGZTRBN2JLT2lucGsvNmhDRHJwM2NWNlFiVkJmYkw1bFBCSnluYnVUb1RXUXdmTkF6ZHR3dlE9PSIsIm1hYyI6IjlmNDE5YmI5YjVkZGRhZTM0MDFhZWY4NjdhZmMzZmI2MGM0ODhmMjc3YzY2NDVlMTUyOTg4MGQyNjlhNGZiZjIiLCJ0YWciOiIifQ==&queryUrl=cHJvZHVjdHM9W3siaWQiOiIzNyIsInNyYyI6Imh0dHA6Ly9sb2NhbGhvc3Q6ODg4OC90b29uaS90b29uaS9wdWIvbWVkaWEvY2F0YWxvZy9wcm9kdWN0L3MvYy9zY3JlZW5zaG90XzIwMjEtMDgtMjBfYXRfMS4wNC4xM19wbV8xXzIucG5nIiwicXVhbnRpdHkiOiIxIiwiYXR0cmlidXRlcyI6W3siQ29sb3IiOiJibHVlIiwiU2l6ZSI6IkxhcmdlIiwiVmlzdWFsIjoiUHVycGxlIix9XSwicHJpY2UiOjE4MDAsInRpdGxlIjoiZmZmZiJ9XSZwcmljZT0xODAwJmN1cnJlbmN5PVBLUiZ1cmw9aHR0cHM6Ly9zYW5kYm94LndvcmRwcmVzcy5xaXNzdHBheS5jb20vd3AtanNvbi9xaXNzdHBheS90ZWV6LyZzaGlwcGluZ190b3RhbD0yMDAmdGF4PTM2JnNoaXBwaW5nX21ldGhvZHM9W3sidGl0bGUiOiJGbGF0IHJhdGUiLCJjb3N0IjoiMjAwIn0seyJ0aXRsZSI6IkxvY2FsIHBpY2t1cCIsImNvc3QiOiIzNTAifSx7InRpdGxlIjoiRnJlZSBzaGlwcGluZyIsImNvc3QiOjB9XQ==
+//echo base64_encode($values);
+//echo "Zaheer";
+// print_r($options);
+// foreach($options as $key => $value){
+//   print_r($key." has the value". $value);
+// }
+// print_r($options);
+$qs='eyJpdiI6Inl4RGE0dVo4L2pUTndkOS92dnpzVUE9PSIsInZhbHVlIjoiTkt0VGJ4Nm5BZHMxOXFDRU9OYi92S2FZVHJ1YWhFbjlGZTRBN2JLT2lucGsvNmhDRHJwM2NWNlFiVkJmYkw1bFBCSnluYnVUb1RXUXdmTkF6ZHR3dlE9PSIsIm1hYyI6IjlmNDE5YmI5YjVkZGRhZTM0MDFhZWY4NjdhZmMzZmI2MGM0ODhmMjc3YzY2NDVlMTUyOTg4MGQyNjlhNGZiZjIiLCJ0YWciOiIifQ==';
+$qurl='cHJvZHVjdHM9W3siaWQiOiIxNTk0Iiwic3JjIjoiaHR0cHM6Ly9zYW5kYm94LndvcmRwcmVzcy5xaXNzdHBheS5jb20vd3AtY29udGVudC91cGxvYWRzLzIwMjEvMTEvNjY2NjY2NjY2NjY2LmpwZWciLCJxdWFudGl0eSI6IjEiLCJhdHRyaWJ1dGVzIjpbeyJhdHRyaWJ1dGVfcGFfdGVzdC1hdHQiOiJibHVlIiwidmFyaWF0aW9uX2lkIjoiMzkzNSJ9XSwicHJpY2UiOjE2MDAsInRpdGxlIjoiU2hpcnQifV0mcHJpY2U9MTYwMCZjdXJyZW5jeT1QS1ImdXJsPWh0dHBzOi8vc2FuZGJveC53b3JkcHJlc3MucWlzc3RwYXkuY29tL3dwLWpzb24vcWlzc3RwYXkvdGVlei8mc2hpcHBpbmdfdG90YWw9MjAwJnRheD0zNiZzaGlwcGluZ19tZXRob2RzPVt7InRpdGxlIjoiRmxhdCByYXRlIiwiY29zdCI6IjIwMCJ9LHsidGl0bGUiOiJMb2NhbCBwaWNrdXAiLCJjb3N0IjoiMzUwIn0seyJ0aXRsZSI6IkZyZWUgc2hpcHBpbmciLCJjb3N0IjowfV0=';
+
+$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+
+
+
+
+$storeManager = $objectManager->get('\Magento\Store\Model\StoreManagerInterface');
+$baseUrl = $storeManager->getStore()->getBaseUrl();  // to get Base Url
+$product = $objectManager->get('Magento\Framework\Registry')->registry('current_product');//get current product
+$proid = $product->getId();
+$proname = $product->getName();
+$proimage = "tooni/pub/media/catalog/product".$product->getData('image');
+$proquantity = 1;
+$proprice = $product->getPrice();
+$protitle = $product->getData('name');
+$attributes = $product->getAttributes();
+$curl = curl_init();
+$apiurl = $baseUrl."/rest/V1/qp/shippingmethodslist";
+curl_setopt($curl, CURLOPT_URL, $apiurl);
+curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+$output = curl_exec($curl);
+//$shippingCost = str_replace('"', '', $output);
+curl_close($curl);
+?>
+
+<span type="hidden" id="productId" name="productId"><?php echo $proid ?></span>
+<span type="hidden" id="productImage" name="productImage"><?php echo $baseUrl.''.$proimage ?></span>
+<span type="hidden" id="baseurl" name="baseurl"><?php echo $baseUrl?></span>
+<span type="hidden" id="productTitle" name="productTitle"><?php echo $proname ?></span>
+<span type="hidden" id="productShipping" name="productShipping"></span>
+<span type="hidden" id="token" name="token"></span>
+<span type="hidden" id="shippingmethodshtml" name="shippingmethodshtml"><?php echo $output ?></span>
+<?php
+// $writer = new \Zend\Log\Writer\Stream(BP . '/var/log/qisstpay.log');
+// $logger = new \Zend\Log\Logger();
+// $logger->addWriter($writer);
+// $logger->info('Product Object: ');
+// $logger->info('ProID: '.$proid);
+// $logger->info('ProTitle: '.$proname);
+// $logger->info('ProImage: '.$proimage);
+// $logger->info('Shipppping: '.$output);
+$colors = array();
+$colorsval = array();
+foreach ($attributes as $option) {
+        $colors[] = $option['label'];
+        $colorsval[] = $option['value'];
+}
+sort($colors);
+// foreach($colorsval as $lbl) {
+//     $logger->info('ProAttributes: '. $lbl);
+// }
+
+// foreach($attributes as $a)
+// {
+//     $logger->info('ProAttributes: '.$a->getName());
+// }
+
+?>
+<script type="text/javascript">
+    require([ 'jquery', 'jquery/ui'], function($){
+
+      $(document).ready(function($) {
+        var productImage = <?php echo $proimage ?>;
+        //console.log(<?php echo $proimage ?>+"#####################################");
+        setTimeout(
+          function()
+          {
+            jQuery("#productId").text(productImage);
+          }, 5000);
+
+        // var productImage = <?php //echo $proimage ?>;
+        // var productTitle = <?php //echo $protitle ?>;
+        // <span type="hidden" id="productId" name="productId"><?php //echo $proid ?></span>
+        // <span type="hidden" id="productImage" name="productImage"><?php //echo $proimage ?></span>
+        // <span type="hidden" id="productTitle" name="productTitle"><?php //echo $protitle ?></span>
+
+        $(".oneclick-button").click(function(){
+
+          // var productId = <?php //echo $proid ?>;
+          // var productImage = <?php //echo $proimage ?>;
+          // //var productQuantity = jQuery(".qty #qty").val();
+          // //var productAttributes = <?php //echo $attributes ?>;
+          // //var productPrice = jQuery(".product-info-price .price-wrapper ").attr("data-price-amount");
+          // //var productTitle = <?php //echo $protitle ?>;
+          // alert("Hello! I am an alert box!!");
+          // console.log(productId);
+          // console.log(productImage);
+          // console.log(productQuantity);
+          // //console.log('Att: '.productAttributes);
+          // console.log(productPrice);
+          //console.log(productTitle);
+          //console.log(jQuery(".swatch-attribute-options").find(":selected:first").text());
+          var i = 0;
+          var visual = jQuery(".swatch-attribute.visual").length;
+          var j = 0;
+          var max = jQuery(".swatch-attribute").length;
+          var keys = [];
+          var indexing = [];
+          while (i < max) {
+              keys.push(jQuery(jQuery(".swatch-opt .swatch-attribute:nth-child("+i+")")).find(":selected").text());
+              indexing.push(jQuery(".swatch-opt .swatch-attribute:nth-child("+i+") .swatch-attribute-label").text());
+              // if(j<visual && jQuery(".swatch-attribute-options").find(".swatch-option.selected").attr("aria-label")){
+              //   keys.push(jQuery(".swatch-attribute-options").find(".swatch-option.selected").attr("aria-label"));
+              //     j++;
+              // }
+              i++;
+          }
+          while (j < visual) {
+            if(j<visual && jQuery(".swatch-attribute-options").find(".swatch-option.selected").attr("aria-label")){
+              keys.push(jQuery(".swatch-attribute-options").find(".swatch-option.selected").attr("aria-label"));
+              indexing.push(jQuery(".swatch-opt .swatch-attribute:nth-child("+i+") .swatch-attribute-label").text());
+                j++;
+            }
+          }
+          var k = 0;
+          var d;
+          while (k < max) {
+            if(k+1 == max){d = array(indexing[k] => keys[k]);}else{d = array(indexing[k] => keys[k],);}
+            k++;
+          }
+          // console.log(d);
+          // console.log(indexing);
+          //console.log(jQuery(jQuery(".swatch-opt .swatch-attribute:nth-child(2)")).find(":selected").text());
+          //console.log(jQuery(".swatch-attribute-options").find(".swatch-option.selected").attr("aria-label"));
+
+          // var pasivedata = 'products=[
+          //   {"id":"1594","src":"https://sandbox.wordpress.qisstpay.com/wp-content/uploads/2021/11/666666666666.jpeg","quantity":"1","attributes":[{"attribute_pa_test-att":"blue","variation_id":"3935"}],"price":1600,"title":"Shirt"}
+          // ]
+          //   &price=1600&currency=PKR&
+          //   url=https://sandbox.wordpress.qisstpay.com/wp-json/qisstpay/teez/&shipping_total=200&tax=36&shipping_methods=[{"title":"Flat rate","cost":"200"},{"title":"Local pickup","cost":"350"},{"title":"Free shipping","cost":0}]';
+
+
+
+
+
+          //const stream;
+//btoa(unescape(encodeURIComponent(stream)));
+//console.log(decodeURIComponent(escape(window.atob(stream))));
+        });
+          //alert("testing ################################");
+      }
+); });
+</script>
+<script>
+function myFunction() {
+  var objection = JSON.parse('<?php echo json_encode($options) ?>');
+  alert(obj.toSource());
+  // console.log('zaheer');
+  // console.log(objection);
+  document.getElementById("demo").innerHTML = "Hello World";
+}
+</script>
+<script type="text/javascript">
+function triggerIFrame() {
+      //alert("I am an alert box!");
+      var productId = jQuery("#productId").text();
+      var productImage = jQuery("#productImage").text();
+      var productQuantity = jQuery(".qty #qty").val();
+      var productPrice = jQuery(".product-info-price .price-wrapper ").attr("data-price-amount");
+      var productTitle = jQuery("#productTitle").text();
+      var productShipping = jQuery("#shippingmethodshtml").text();
+      var baseurl = jQuery("#baseurl").text();
+      // console.log(productId);
+      // console.log(productImage);
+      // console.log(productQuantity);
+      // console.log(productPrice);
+      // console.log(productTitle);
+
+
+      var i = 0;
+      var visual = jQuery(".swatch-attribute.visual").length;
+      var j = 0;
+      var max = jQuery(".swatch-attribute").length;
+      var keys = [];
+      var indexing = [];
+      while (i < max) {
+          keys.push(jQuery(jQuery(".swatch-opt .swatch-attribute:nth-child("+i+")")).find(":selected").text());
+          indexing.push(jQuery(".swatch-opt .swatch-attribute:nth-child("+i+") .swatch-attribute-label").text());
+          // if(j<visual && jQuery(".swatch-attribute-options").find(".swatch-option.selected").attr("aria-label")){
+          //   keys.push(jQuery(".swatch-attribute-options").find(".swatch-option.selected").attr("aria-label"));
+          //     j++;
+          // }
+          i++;
+      }
+      while (j < visual) {
+        if(j<visual && jQuery(".swatch-attribute-options").find(".swatch-option.selected").attr("aria-label")){
+          keys.push(jQuery(".swatch-attribute-options").find(".swatch-option.selected").attr("aria-label"));
+          indexing.push(jQuery(".swatch-opt .swatch-attribute:nth-child("+i+") .swatch-attribute-label").text());
+            j++;
+        }
+      }
+      var indexed = indexing.filter(function(v){return v!==''});
+      var valued = keys.filter(function(v){return v!==''});
+
+      var k = 0;
+      var resultant = {};
+      while (k < max) {
+          resultant[indexed[k]] = valued[k];
+          k++;
+      }
+      //console.log(resultant);
+      var attris = '';
+      for (var key in resultant) {
+          var value = resultant[key];
+          //console.log(key, value);
+          attris = attris+'"'+key+'":"'+value+'",';
+      }
+      // console.log(indexing);
+      //console.log(attris);
+
+      var streamhit = 'products=[{"id":"'+productId+'","src":"'+productImage+'","quantity":"'+productQuantity+'","attributes":[{'+attris+'}],"price":'+productPrice+',"title":"'+productTitle+'"}]&price='+productPrice+'&currency=PKR&url=https://sandbox.wordpress.qisstpay.com/wp-json/qisstpay/teez/&shipping_total=0&tax=0&shipping_methods='+productShipping;
+      streamhit = streamhit.replace(',}', '}');
+
+      var streatfinal = btoa(unescape(encodeURIComponent(streamhit)));
+      var baseuri = btoa(unescape(encodeURIComponent(baseurl)));
+      var bata = 'https://sandbox.tezcheckout.qisstpay.com/?identity-token='+'aHR0cDovLzU0LjI1NS4yMy4xNy8='+'\&'+'queryUrl=';
+
+      // var sourceString = bata+'cHJvZHVjdHM9W3siaWQiOiIxNTk0Iiwic3JjIjoiaHR0cHM6Ly9zYW5kYm94LndvcmRwcmVzcy5xaXNzdHBheS5jb20vd3AtY29udGVudC91cGxvYWRzLzIwMjEvMTEvNjY2NjY2NjY2NjY2LmpwZWciLCJxdWFudGl0eSI6IjEiLCJhdHRyaWJ1dGVzIjpbeyJhdHRyaWJ1dGVfcGFfdGVzdC1hdHQiOiJibHVlIiwidmFyaWF0aW9uX2lkIjoiMzkzNSJ9XSwicHJpY2UiOjE2MDAsInRpdGxlIjoiU2hpcnQifV0mcHJpY2U9MTYwMCZjdXJyZW5jeT1QS1ImdXJsPWh0dHBzOi8vc2FuZGJveC53b3JkcHJlc3MucWlzc3RwYXkuY29tL3dwLWpzb24vcWlzc3RwYXkvdGVlei8mc2hpcHBpbmdfdG90YWw9MjAwJnRheD0zNiZzaGlwcGluZ19tZXRob2RzPVt7InRpdGxlIjoiRmxhdCByYXRlIiwiY29zdCI6IjIwMCJ9LHsidGl0bGUiOiJMb2NhbCBwaWNrdXAiLCJjb3N0IjoiMzUwIn0seyJ0aXRsZSI6IkZyZWUgc2hpcHBpbmciLCJjb3N0IjowfV0=';
+
+      //console.log(datastreaming);
+      var datastreaming = bata+streatfinal;
+
+      let unescapedurl=_.unescape(datastreaming);
+      // console.log(streamhit);
+      // console.log(streatfinal);
+      // console.log(unescapedurl);
+      //var newStream = datastreaming.replace(/&amp;/g, '&');
+
+      jQuery("#qisttpayifram").attr('src', unescapedurl);
+      // jQuery("#qisttpayifram").attr('src', function(index, text) {
+      //   return text.replace('&amp;', '&');
+      // });
+      window.addEventListener('message', function(e) {
+                      // Get the sent data
+                      const data = e.data;
+
+                      try {
+                          if(data.qp_flag_teez == true){
+                              window.location.href= data.link;
+                              ///form Submit
+                          } else if(data.qp_flag_teez == false) {
+                              jQuery('.qp8911_modal').hide();
+                              jQuery('body').css('position', 'initial');
+                              jQuery('body').css('width', 'initial');
+                              jQuery('.qisttpayifram').attr('src', null);
+                          }
+                      } catch(e){
+                          return;
+                      }
+                  });
+      jQuery('#qp8911_bootstrapModal').show();
+      jQuery('#closed').click(function(){
+          //location.reload();
+          jQuery('#qp8911_bootstrapModal').hide();
+      })
+    }
+</script>
+
+
+<div class="qp8911_modal" id="qp8911_bootstrapModal" role="dialog">
+    <div class="qp8911_modal-dialog qp8911_modal-dialog-centered" role="document" >
+        <div class="qp8911_modal-content col-md-8 qp-custom-mage-design">
+            <!-- <span class="close" id="closed">&times;</span> -->
+
+            <div class="modal-header"></div>
+
+            <div class="qp8911_modal-body">
+                <div class="form-popup" id="myForm" style="border: 1px solid gainsboro;top: 0px;background: white;border-radius: 4px; display: none">
+                    <form action="" method="post" class="form-container" id="myformtobesubmit">
+                        <input type="hidden" name="order" value="lkld">
+                    </form>
+                </div>
+                <iframe id="qisttpayifram" width="100%" height="100%"  src="" frameborder="0" allowfullscreen style="background: #FFFFFF;" ></iframe>
+
+            </div>
+        </div>
+    </div>
+</div>

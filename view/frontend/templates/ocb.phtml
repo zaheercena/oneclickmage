@@ -1,0 +1,272 @@
+<style>
+    .oneclick-button
+    {
+        background-image: none;
+        background: #1979c3;
+        border: 1px solid #1979c3;
+        color: #fff;
+        cursor: pointer;
+        display: inline-block;
+        font-family: 'Open Sans','Helvetica Neue',Helvetica,Arial,sans-serif;
+        font-weight: 600;
+        box-sizing: border-box;
+        vertical-align: middle;
+        float: left;
+        line-height: 2.2rem;
+        padding: 14px 17px;
+        font-size: 1.8rem;
+        margin-bottom: 15px;
+        width: 49%;
+        border-radius: 3px;
+        width: 100% !important;
+        height: 50px !important;
+        border-radius: 8px !important;
+        font-weight: 700 !important;
+        font-size: 18px !important;
+        background-color: #e82e81 !important;
+        color: white !important;
+        cursor: pointer !important;
+        display: flex !important;
+        -webkit-box-align: center !important;
+        align-items: center !important;
+        -webkit-box-pack: center !important;
+        justify-content: center !important;
+        border: 1px solid #e82e81 !important;
+        outline-color: transparent !important;
+        margin-bottom: 0.5rem !important;
+        text-decoration: none !important;
+    }
+    .action,.primary
+    {
+        float: left;
+    }
+    .qp-custom-mage-design{
+      width: 45%;
+      padding:0px !important;
+      height: 80vh;
+    }
+    .qp8911_modal-body{
+      height: 100%;
+    }
+</style>
+<style>
+
+/* The qp8911_modal (background) */
+.qp8911_modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1000; /* Sit on top */
+  padding-top: 100px; /* Location of the box */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: #00000099; /* Black w/ opacity */
+}
+/* qp8911_modal Content */
+.qp8911_modal-content {
+  background-color: #fefefe;
+  margin: auto;
+  padding: 10px;
+  border: 1px solid #888;
+  width: 30%;
+}
+/* The Close Button */
+.close {
+  color: #aaaaaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+.close:hover,
+.close:focus {
+  color: #000;
+  text-decoration: none;
+  cursor: pointer;
+}
+.qp8911_modal-dialog.qp8911_modal-dialog-centered{
+   display: flex;
+}
+@media screen and (max-width: 768px) {
+    .qp8911_modal-content {
+        width: 90%;
+    }
+}
+.qp8911_modal-body {
+    overflow-y: auto;
+}
+</style>
+<?php
+$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+$storeManager = $objectManager->get('\Magento\Store\Model\StoreManagerInterface');
+$baseUrl = $storeManager->getStore()->getBaseUrl();  // to get Base Url
+
+
+$curl = curl_init();
+$apiurl = $baseUrl."/rest/V1/qp/shippingmethodslist";
+curl_setopt($curl, CURLOPT_URL, $apiurl);
+curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+$output = curl_exec($curl);
+curl_close($curl);
+
+$cart = $objectManager->get('\Magento\Checkout\Model\Cart');
+
+// retrieve quote items collection
+$itemsCollection = $cart->getQuote()->getItemsCollection();
+
+// get array of all items what can be display directly
+$itemsVisible = $cart->getQuote()->getAllVisibleItems();
+
+// retrieve quote items array
+ $items = $cart->getQuote()->getAllItems();
+$data= array();
+$totalPrice = 0;
+foreach($items as $item) {
+  //    echo 'ID: '.$item->getProductId().'<br />';
+  //     echo 'Name: '.$item->getName().'<br />';
+  //      echo 'Sku: '.$item->getSku().'<br />';
+  //      echo 'Quantity: '.$item->getQty().'<br />';
+  //     echo 'Price: '.$item->getPrice().'<br />';
+    if (!$item->getHasChildren()){
+      $totalPrice = $totalPrice + $item->getParentItem()->getPrice();
+      $productioncart = array(
+         'id' => $item->getProductId(),
+         'src' => $item->getProductId(),
+         'quantity' => $item->getQty(),
+         'attributes' => $item->getProductId(),
+         'price' => $item->getParentItem()->getPrice(),
+         'title' => $item->getName()
+     );
+     $data[] = $productioncart;
+   }
+  }
+  $msg = array($data);
+  $itfresinfo = json_encode($msg);
+  $itfresinfo = substr($itfresinfo, 1);
+  $itfresinfo = str_replace("}]]", "}]", $itfresinfo);
+
+
+
+
+//echo $output;
+?>
+
+<!-- <span type="hidden" id="shippingmethodshtml" name="shippingmethodshtml"><?php //echo $output ?></span> -->
+<span type="hidden" id="itfresinfo" name="itfresinfo" style="display:none"><?php echo $itfresinfo ?></span>
+<span type="hidden" id="productImage" name="productImage" style="display:none"><?php echo $baseUrl ?></span>
+<span type="hidden" id="totalPrice" name="totalPrice" style="display:none"><?php echo $totalPrice ?></span>
+<span type="hidden" id="baseurl" name="baseurl"><?php echo $baseUrl ?></span>
+<span type="hidden" id="shippingmethodshtml" name="shippingmethodshtml" style="display:none"><?php echo $output ?></span>
+<!-- <input class="oneclick-button" onclick="triggerIFrame()" value="QisstPay OneClick"> -->
+<p class="oneclick-button" onclick="triggerIFrame()">QisstPay OneClick</p>
+<script type="text/javascript">
+function triggerIFrame() {
+      //alert("I am an alert box!");
+      var productId = jQuery("#itfresinfo").text();
+      var productImage = '<?php echo $baseUrl ?>';
+      var productQuantity = 1;
+      var productPrice = jQuery("#totalPrice").text();
+      var productShipping = jQuery("#shippingmethodshtml").text();
+      var baseurl = jQuery("#baseurl").text();
+      console.log(productId);
+      console.log(productImage);
+      console.log(productQuantity);
+      console.log(productPrice);
+
+
+      var i = 0;
+      var visual = jQuery(".swatch-attribute.visual").length;
+      var j = 0;
+      var max = jQuery(".swatch-attribute").length;
+      var keys = [];
+      var indexing = [];
+      while (i < max) {
+          keys.push(jQuery(jQuery(".swatch-opt .swatch-attribute:nth-child("+i+")")).find(":selected").text());
+          indexing.push(jQuery(".swatch-opt .swatch-attribute:nth-child("+i+") .swatch-attribute-label").text());
+          i++;
+      }
+      while (j < visual) {
+        if(j<visual && jQuery(".swatch-attribute-options").find(".swatch-option.selected").attr("aria-label")){
+          keys.push(jQuery(".swatch-attribute-options").find(".swatch-option.selected").attr("aria-label"));
+          indexing.push(jQuery(".swatch-opt .swatch-attribute:nth-child("+i+") .swatch-attribute-label").text());
+            j++;
+        }
+      }
+      var indexed = indexing.filter(function(v){return v!==''});
+      var valued = keys.filter(function(v){return v!==''});
+
+      var k = 0;
+      var resultant = {};
+      while (k < max) {
+          resultant[indexed[k]] = valued[k];
+          k++;
+      }
+      //console.log(resultant);
+      var attris = '';
+      for (var key in resultant) {
+          var value = resultant[key];
+          //console.log(key, value);
+          attris = attris+'"'+key+'":"'+value+'",';
+      }
+      // console.log(indexing);
+      //console.log(attris);
+
+      var streamhit = 'products='+productId+'&price='+productPrice+'&currency=PKR&url=https://sandbox.wordpress.qisstpay.com/wp-json/qisstpay/teez/&shipping_total=0&tax=0&shipping_methods='+productShipping;
+      //streamhit = streamhit.replace(',}', '}');
+console.log(streamhit);
+      var streatfinal = btoa(unescape(encodeURIComponent(streamhit)));
+      var baseuri = btoa(unescape(encodeURIComponent(baseurl)));
+      var bata = 'https://sandbox.tezcheckout.qisstpay.com/?identity-token='+'aHR0cDovLzU0LjI1NS4yMy4xNy8='+'\&'+'queryUrl=';
+      var datastreaming = bata+streatfinal;
+
+      let unescapedurl=_.unescape(datastreaming);
+      jQuery("#qisttpayifram").attr('src', unescapedurl);
+      // jQuery("#qisttpayifram").attr('src', function(index, text) {
+      //   return text.replace('&amp;', '&');
+      // });
+      window.addEventListener('message', function(e) {
+                      // Get the sent data
+                      const data = e.data;
+
+                      try {
+                          if(data.qp_flag_teez == true){
+                              window.location.href= data.link;
+                              ///form Submit
+                          } else if(data.qp_flag_teez == false) {
+                              jQuery('.qp8911_modal').hide();
+                              jQuery('body').css('position', 'initial');
+                              jQuery('body').css('width', 'initial');
+                              jQuery('.qisttpayifram').attr('src', null);
+                          }
+                      } catch(e){
+                          return;
+                      }
+                  });
+      jQuery('#qp8911_bootstrapModal').show();
+      jQuery('#closed').click(function(){
+          //location.reload();
+          jQuery('#qp8911_bootstrapModal').hide();
+      })
+    }
+</script>
+
+<div class="qp8911_modal" id="qp8911_bootstrapModal" role="dialog">
+    <div class="qp8911_modal-dialog qp8911_modal-dialog-centered" role="document" >
+        <div class="qp8911_modal-content col-md-8 qp-custom-mage-design">
+            <!-- <span class="close" id="closed">&times;</span> -->
+
+            <div class="modal-header"></div>
+
+            <div class="qp8911_modal-body">
+                <div class="form-popup" id="myForm" style="border: 1px solid gainsboro;top: 0px;background: white;border-radius: 4px; display: none">
+                    <form action="" method="post" class="form-container" id="myformtobesubmit">
+                        <input type="hidden" name="order" value="lkld">
+                    </form>
+                </div>
+                <iframe id="qisttpayifram" width="100%" height="100%"  src="" frameborder="0" allowfullscreen style="background: #FFFFFF;" ></iframe>
+
+            </div>
+        </div>
+    </div>
+</div>

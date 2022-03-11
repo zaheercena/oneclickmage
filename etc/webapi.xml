@@ -1,0 +1,67 @@
+<?xml version="1.0"?>
+<routes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Webapi:etc/webapi.xsd">
+    <!-- <route method="GET" url="/V1/cozmot/storeautomationapi">
+        <service class="Cozmot\StoreAutomationApi\Api\RaptorInterface" method="customGetMethod"/>
+        <resources>
+            <resource ref="anonymous"/>
+        </resources>
+    </route> -->
+<!--POST API Start-->
+    <route method="GET" url="/V1/qp/orderid">
+<service class="Qisst\Oneclick\Api\RaptorInterface" method="returnOrderId"/>
+        <resources>
+            <resource ref="anonymous"/>
+        </resources>
+    </route>
+
+    <route method="POST" url="/V1/qp/create-order">
+<service class="Qisst\Oneclick\Api\RaptorInterface" method="createOrder"/>
+        <resources>
+            <resource ref="anonymous"/>
+        </resources>
+    </route>
+
+    <route method="POST" url="/V1/qp/create-order2">
+<service class="Qisst\Oneclick\Api\RaptorInterface" method="updateStockItems"/>
+        <resources>
+            <resource ref="anonymous"/>
+        </resources>
+    </route>
+
+
+        <route method="POST" url="/V1/qpc/create-order">
+    <service class="Qisst\Oneclick\Api\OnepageInterface" method="placeOrder"/>
+            <resources>
+                <resource ref="anonymous"/>
+            </resources>
+        </route>
+
+        <route method="GET" url="/V1/qp/shippingmethodslist">
+    <service class="Qisst\Oneclick\Api\ShippingInterface" method="toOptionArray"/>
+            <resources>
+                <resource ref="anonymous"/>
+            </resources>
+        </route>
+        <route method="GET" url="/V1/qp/returnshipmeth">
+    <service class="Qisst\Oneclick\Api\ShippingInterface" method="returnShipMeth"/>
+            <resources>
+                <resource ref="anonymous"/>
+            </resources>
+        </route>
+
+        <route method="GET" url="/V1/qp/taxreturn">
+    <service class="Qisst\Oneclick\Api\TaxrateInterface" method="taxReturn"/>
+            <resources>
+                <resource ref="anonymous"/>
+            </resources>
+        </route>
+        <route method="POST" url="/V1/qp/orderstatus">
+    <service class="Qisst\Oneclick\Api\TaxrateInterface" method="orderStatus"/>
+            <resources>
+                <resource ref="anonymous"/>
+            </resources>
+        </route>
+
+
+
+</routes>
