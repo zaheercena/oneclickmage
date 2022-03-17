@@ -3,11 +3,8 @@
 ## Qisstpay.com Oneclick Extension
 
 ## Installation
-The easiest and recommended way to install the Qisstpay.com Magento 2 extension is to run the following commands in a terminal, from your Magento 2 root directory:
+The suggested way to install the Qisstpay.com OneClick extension is to Download and place Extension inside app->code like following:
 
 ```bash
-composer require qisst/oneclick:dev-master
-php bin/magento setup:upgrade
-rm -rf var/cache var/generation/ var/di
-bin/magento setup:di:compile
-php bin/magento cache:clean
+Download and add extension in your magento app->code and Extension Structure is Qisst->Oneclick directory
+bin/magento setup:upgrade && bin/magento setup:di:compile && bin/magento cache:clean
