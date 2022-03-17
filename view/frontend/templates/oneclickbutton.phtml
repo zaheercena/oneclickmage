@@ -131,6 +131,8 @@ curl_setopt($curl, CURLOPT_URL, $apiurl);
 curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
 $output = curl_exec($curl);
 curl_close($curl);
+$extstatus = $this->helper('Qisst\Oneclick\Helper\Data')->getConfig('qp/config/qp_is_live');
+$exstatus = $extstatus == 1? 'https://tezcheckout.qisstpay.com/':'https://sandbox.tezcheckout.qisstpay.com/';
 ?>
 
 <span type="hidden" id="productId" name="productId"><?php echo $proid ?></span>
@@ -138,6 +140,7 @@ curl_close($curl);
 <span type="hidden" id="baseurl" name="baseurl"><?php echo $baseUrl?></span>
 <span type="hidden" id="productTitle" name="productTitle"><?php echo $proname ?></span>
 <span type="hidden" id="productShipping" name="productShipping"></span>
+<span type="hidden" id="exstatus" name="exstatus"><?php echo $exstatus ?></span>
 <span type="hidden" id="token" name="token"></span>
 <span type="hidden" id="shippingmethodshtml" name="shippingmethodshtml"><?php echo $output ?></span>
 <?php
@@ -204,6 +207,7 @@ function triggerIFrame() {
       var productTitle = jQuery("#productTitle").text();
       var productShipping = jQuery("#shippingmethodshtml").text();
       var baseurl = jQuery("#baseurl").text();
+      var exstatus = jQuery("#exstatus").text();
       var i = 0;
       var visual = jQuery(".swatch-attribute.visual").length;
       var j = 0;
@@ -236,12 +240,12 @@ function triggerIFrame() {
           var value = resultant[key];
           attris = attris+'"'+key+'":"'+value+'",';
       }
-      var streamhit = 'products=[{"id":"'+productId+'","src":"'+productImage+'","quantity":"'+productQuantity+'","attributes":[{'+attris+'}],"price":'+productPrice+',"title":"'+productTitle+'"}]&price='+productPrice+'&currency=PKR&url=https://sandbox.wordpress.qisstpay.com/wp-json/qisstpay/teez/&shipping_total=0&tax=0&shipping_methods='+productShipping;
+      var streamhit = 'products=[{"id":"'+productId+'","src":"'+productImage+'","quantity":"'+productQuantity+'","attributes":[{'+attris+'}],"price":'+productPrice+',"title":"'+productTitle+'"}]&price='+productPrice+'&currency=PKR&url='+exstatus+'&shipping_total=0&tax=0&shipping_methods='+productShipping;
       streamhit = streamhit.replace(',}', '}');
 
       var streatfinal = btoa(unescape(encodeURIComponent(streamhit)));
       var baseuri = btoa(unescape(encodeURIComponent(baseurl)));
-      var bata = 'https://sandbox.tezcheckout.qisstpay.com/?identity-token='+baseuri+'\&'+'queryUrl=';
+      var bata = exstatus+'?identity-token='+baseuri+'\&'+'queryUrl=';
       var datastreaming = bata+streatfinal;
       let unescapedurl=_.unescape(datastreaming);
       jQuery("#qisttpayifram").attr('src', unescapedurl);

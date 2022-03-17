@@ -138,11 +138,14 @@ foreach($items as $item) {
   $itfresinfo = json_encode($msg);
   $itfresinfo = substr($itfresinfo, 1);
   $itfresinfo = str_replace("}]]", "}]", $itfresinfo);
+  $extstatus = $this->helper('Qisst\Oneclick\Helper\Data')->getConfig('qp/config/qp_is_live');
+  $exstatus = $extstatus == 1? 'https://tezcheckout.qisstpay.com/':'https://sandbox.tezcheckout.qisstpay.com/';
 ?>
 <span type="hidden" id="itfresinfo" name="itfresinfo" style="display:none"><?php echo $itfresinfo ?></span>
 <span type="hidden" id="productImage" name="productImage" style="display:none"><?php echo $baseUrl ?></span>
 <span type="hidden" id="totalPrice" name="totalPrice" style="display:none"><?php echo $totalPrice ?></span>
 <span type="hidden" id="baseurl" name="baseurl"><?php echo $baseUrl ?></span>
+<span type="hidden" id="exstatus" name="exstatus"><?php echo $exstatus ?></span>
 <span type="hidden" id="shippingmethodshtml" name="shippingmethodshtml" style="display:none"><?php echo $output ?></span>
 <p class="oneclick-button" onclick="triggerIFrame()">QisstPay OneClick</p>
 <script type="text/javascript">
@@ -153,10 +156,11 @@ function triggerIFrame() {
       var productPrice = jQuery("#totalPrice").text();
       var productShipping = jQuery("#shippingmethodshtml").text();
       var baseurl = jQuery("#baseurl").text();
-      console.log(productId);
-      console.log(productImage);
-      console.log(productQuantity);
-      console.log(productPrice);
+      var exstatus = jQuery("#exstatus").text();
+      //console.log(productId);
+      //console.log(productImage);
+      //console.log(productQuantity);
+      //console.log(productPrice);
       var i = 0;
       var visual = jQuery(".swatch-attribute.visual").length;
       var j = 0;
@@ -188,11 +192,11 @@ function triggerIFrame() {
           var value = resultant[key];
           attris = attris+'"'+key+'":"'+value+'",';
       }
-      var streamhit = 'products='+productId+'&price='+productPrice+'&currency=PKR&url=https://sandbox.wordpress.qisstpay.com/wp-json/qisstpay/teez/&shipping_total=0&tax=0&shipping_methods='+productShipping;
+      var streamhit = 'products='+productId+'&price='+productPrice+'&currency=PKR&url='+exstatus+'&shipping_total=0&tax=0&shipping_methods='+productShipping;
 console.log(streamhit);
       var streatfinal = btoa(unescape(encodeURIComponent(streamhit)));
       var baseuri = btoa(unescape(encodeURIComponent(baseurl)));
-      var bata = 'https://sandbox.tezcheckout.qisstpay.com/?identity-token='+baseuri+'\&'+'queryUrl=';
+      var bata = exstatus+'?identity-token='+baseuri+'\&'+'queryUrl=';
       var datastreaming = bata+streatfinal;
       let unescapedurl=_.unescape(datastreaming);
       jQuery("#qisttpayifram").attr('src', unescapedurl);
