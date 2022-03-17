@@ -67,14 +67,6 @@ class Taxrate extends \Magento\Framework\DataObject implements \Magento\Framewor
       $storeManager = $objectManager->get('\Magento\Store\Model\StoreManagerInterface');
       $baseUrl = $storeManager->getStore()->getBaseUrl();
       $params['link'] = $baseUrl.'qisstpay?orderid='.$params['order_id'];
-
-
-      // $order = $this->order->load($orderId);
-      // $order->setStatus($params['status']);
-      // $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
-      // $order = $objectManager->create('\Magento\Sales\Model\Order')->load($orderId);
-      // $order->addStatusHistoryComment($params['payment_note']);
-      // $order->save();
       return json_encode($params);
     }
 }

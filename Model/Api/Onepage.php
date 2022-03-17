@@ -66,22 +66,6 @@ class Onepage extends \Magento\Framework\Model\AbstractModel
     }
 
     public function placeOrder($params) {
-//return $params;
-        //$customer = $this->_registry->registry('auth_customer');
-        // if (!$customer) {
-        //     throw new Exception($this->__('User not authorized'));
-        // }
-
-        //$data = json_decode(json_encode($data), True);
-
-        // $items = $this->getCartItems();
-        //$items = $data['products'];
-
-        //$customerAddressModel = $this->_objectManager->create('Magento\Customer\Model\Address');
-        //$shippingID =  $customer->getDefaultShipping();
-        //$address = $customerAddressModel->load($shippingID);
-
-//magento default currency get ###########################################
         $orderData = [
             'currency_id' => 'PKR',
             'email' => $params['email'], //buyer email id
@@ -149,36 +133,15 @@ class Onepage extends \Magento\Framework\Model\AbstractModel
             $cart->assignCustomer($customer); //Assign quote to customer
 
             $_productModel = $this->_productFactory->create();
-            //add items in quote
             $naming = '';
             $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
             $productRepo = $objectManager->create('Magento\Catalog\Api\ProductRepositoryInterface');
-            //$product = $productRepo->getById(1);
             foreach ($orderData['items'] as $item) {
-
-                //$product = $_productModel->load($item['id']);
                 $product = $productRepo->getById($item['id']);
 
                 $naming = $naming.' '.$item['id'];
                 try {
-                    // print_r($item); die();
                     $params = array('product' => $item['id'], 'qty' => $item['quantity']);
-                    // if (array_key_exists('options', $item) && $item['options']) {
-                    //     $params['options'] = json_decode(json_encode($item['options']), True);
-                    // }
-                    // if ($product->getTypeId() == 'configurable') {
-                    //     $params['super_attribute'] = $item['super_attribute'];
-                    // } elseif ($product->getTypeId() == 'bundle') {
-                    //     $params['bundle_option'] = $item['bundle_option'];
-                    //     $params['bundle_option_qty'] = $item['bundle_option_qty'];
-                    // } elseif ($product->getTypeId() == 'grouped') {
-                    //     $params['super_group'] = $item['super_group'];
-                    // }
-
-                    // $objParam = new \Magento\Framework\DataObject();
-                    // $objParam->setData($params);
-                    // $cart->addProduct($product, $objParam);
-
                      $cart->addProduct($product,intval($item['quantity']));
                 } catch (Exception $e) {
                     $response[$item['id']]= $e->getMessage();
@@ -256,7 +219,6 @@ class Onepage extends \Magento\Framework\Model\AbstractModel
         $itemModel = $this->_objectManager->create('Magento\Quote\Model\Quote\Item');//Quote item model to load quote item
         return $itemModel;
     }
-
 
     public function shippingMethodsList(){
       return "Progress";

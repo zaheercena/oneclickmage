@@ -42,30 +42,17 @@ class createiframe extends \Magento\Framework\App\Action\Action
             'qp/config/merchant_api_key',
             \Magento\Store\Model\ScopeInterface::SCOPE_STORE
         );
-
-
         $key = $this->_encryptor->decrypt($key);
-
         $is_live = $this->_scopeConfig->getValue(
           'qp/config/qp_is_live',
           \Magento\Store\Model\ScopeInterface::SCOPE_STORE
         );
-
         $url = $is_live == 1? 'https://qisstpay.com/api/send-data':'https://sandbox.qisstpay.com/api/send-data';
         $curl = curl_init();
-        //
-        // $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
-        // $cart = $objectManager->get('\Magento\Checkout\Model\Cart');
-        // $shippingAddress = $cart->getQuote()->getShippingAddress();
-        // $cartId = $cart->getQuote()->getId();
-        // $cart_data = $shippingAddress->getData();
-        // $objctManager = \Magento\Framework\App\ObjectManager::getInstance();
-        //
         $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
         $cart = $objectManager->get('\Magento\Checkout\Model\Cart');
         $shippingAddress = $cart->getQuote()->getShippingAddress();
         $cartId = $cart->getQuote()->getId();
-
         $this->_resources = \Magento\Framework\App\ObjectManager::getInstance()->get('Magento\Framework\App\ResourceConnection');
         $connection= $this->_resources->getConnection();
         $tableName   = $connection->getTableName('quote');
@@ -73,9 +60,6 @@ class createiframe extends \Magento\Framework\App\Action\Action
         $orderno = $connection->fetchAll($sql);
         $cart_data = $shippingAddress->getData();
         $objctManager = \Magento\Framework\App\ObjectManager::getInstance();
-
-
-
         $remote = $objctManager->get('Magento\Framework\HTTP\PhpEnvironment\RemoteAddress');
         curl_setopt_array($curl, array(
           CURLOPT_URL => $url,
@@ -127,17 +111,8 @@ class createiframe extends \Magento\Framework\App\Action\Action
         ));
 
         $response = curl_exec($curl);
-
         curl_close($curl);
-
         $result = $this->resultJsonFactory->create();
-
-        // $writer = new \Zend\Log\Writer\Stream(BP . '/var/log/qisstpay.log');
-        // $logger = new \Zend\Log\Logger();
-        // $logger->addWriter($writer);
-        // $logger->info('Below are OrderNo Refined');
-        // $logger->info($orderno);
-        // $logger->info('CartID: '.$cartId);
         return $result->setData(json_decode($response, 1));
     }
 }

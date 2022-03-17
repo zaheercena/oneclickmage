@@ -61,8 +61,6 @@ class Raptor implements RaptorInterface
     * @return int $orderId
     *
     */
-    //public function createOrder($orderfname, $orderlname, $orderemail, $orderphone, $orderaddress1, $orderaddress2, $ordercity, $orderstate, $orderpostcode, $ordercountry, $orderquantiry, $orderprice, $ordershipping, $ordertax, $ordernote){
-
     public function createOrder($first_name, $last_name, $email, $phone, $address_1, $address_2, $city, $state, $postcode, $country, $quantity, $total_amount, $shipping_total, $tax_amount, $payment_note){
       //init the store id and website id @todo pass from array
       $orderData=[
@@ -147,26 +145,9 @@ class Raptor implements RaptorInterface
 
                   //@todo insert a variable to affect the invetory
                   $cart->setInventoryProcessed(false);
-
-                  // Set sales order payment
                   $cart->getPayment()->importData(['method' => 'checkmo']);
-
-                  // Collect total and save
                   $cart->collectTotals();
-
-
-
-                  // Submit the quote and create the order
-                  // $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
-                  // $order = $objectManager->create('\Magento\Sales\Model\Order')->load(53);
-                  // $order->addStatusHistoryComment('This comment is programatically added to last order in this Magento setup');
-                  // $order->save();
-
-
                   $cart->save();
-                  //$cart = $this->cartRepositoryInterface->get($cart->getId());
-                  //return $cart->getId();
-
                   $order_id = $this->cartManagementInterface->placeOrder($cart->getId());
                   return $cart_id;
     }
@@ -178,46 +159,7 @@ class Raptor implements RaptorInterface
      */
     public function updateStockItems($stockItems)
     {
-        //$json = json_decode(json_encode($stockItems), true);
         echo $stockItems[1]['firstname'];
-        // foreach ($stockItems as $stockItem){
-        //     //echo $stockItem['stockItemss'][0];
-        // }
-        //print_r ($json);
-        /*
-        {
-   "stockItems": [
-      {
-        "item_id": 1,
-        "product_id": 1,
-        "stock_id": 1,
-        "qty": 15
-      },
-      {
-        "item_id": 2,
-        "product_id": 2,
-        "stock_id": 2,
-        "qty": 15
-      }
-   ],
-   "shipping_address":[
-            {
-            "firstname":"QisstPay",
-            "lastname" : "BNPL",
-            "street" : "DHA Phase 5",
-            "city":"Lahore",
-            "country_id":"PK",
-            "region":"CA",
-            "postcode":"33284",
-            "telephone":"03011000201",
-            "fax":"56456",
-            "save_in_address_book": 1
-            }
-    ],
-    "currency_id":"PKR",
-    "email":"zaheer.ahmed@qisstpay.com"
-}
-*/
         return 1;
     }
 /* This is Validator Function Only  End */

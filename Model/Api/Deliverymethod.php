@@ -42,9 +42,6 @@ class Deliverymethod extends \Magento\Framework\DataObject implements \Magento\F
             );
         }
         return $deliveryMethodsArray;
-
-
-
     }
     public function returnShipMeth($cost)
     {
