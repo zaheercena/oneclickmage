@@ -8,3 +8,4 @@ The suggested way to install the Qisstpay.com OneClick extension is to Download 
 ```bash
 Download and add extension in your magento app->code and Extension Structure is Qisst->Oneclick directory
 bin/magento setup:upgrade && bin/magento setup:di:compile && bin/magento cache:clean
+
